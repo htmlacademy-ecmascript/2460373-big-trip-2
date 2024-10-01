@@ -1,4 +1,3 @@
-// import EventCreateFormView from '../view/event-create-form-view.js';
 import EventEditFormView from '../view/event-edit-form-view.js';
 import EventView from '../view/event-view.js';
 import ListView from '../view/list-view.js';
