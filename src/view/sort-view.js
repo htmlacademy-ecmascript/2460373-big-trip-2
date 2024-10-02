@@ -9,7 +9,8 @@ function createSortTemplate() {
       </div>
 
       <div class="trip-sort__item  trip-sort__item--event">
-        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" disabled>
+        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event"
+          disabled>
         <label class="trip-sort__btn" for="sort-event">Event</label>
       </div>
 
@@ -19,12 +20,14 @@ function createSortTemplate() {
       </div>
 
       <div class="trip-sort__item  trip-sort__item--price">
-        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" checked>
+        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price"
+          checked>
         <label class="trip-sort__btn" for="sort-price">Price</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--offer">
-        <input id="sort-offer" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-offer" disabled>
+        <input id="sort-offer" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-offer"
+          disabled>
         <label class="trip-sort__btn" for="sort-offer">Offers</label>
       </div>
     </form>`
