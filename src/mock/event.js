@@ -3,7 +3,7 @@ import { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRan
 const MIN_PICTURE_COUNT = 0;
 const MAX_PICTURE_COUNT = 5;
 const MIN_OFFER_COUNT = 0;
-const MAX_OFFER_COUNT = 5;
+const MAX_OFFER_COUNT = 3;
 const MIN_OFFER_PRICE = 10;
 const MAX_OFFER_PRICE = 200;
 
@@ -52,17 +52,10 @@ const createDestination = (cityName) => ({
   id: generateDestinationId(),
   description: `${cityName} — is a beautiful city`,
   name: cityName,
-  pictures: Array.from({ length: getRandomInteger(MIN_PICTURE_COUNT, MAX_PICTURE_COUNT) }, generatePictures)
+  pictures: generatePictures(getRandomInteger(MIN_PICTURE_COUNT, MAX_PICTURE_COUNT))
 });
 
-const createDestinations = () => {
-  const destinations = [];
-  for (let i = 0; i < CITIES_LIST.length; i++) {
-    const destination = createDestination(CITIES_LIST[i]);
-    destinations.push(destination);
-  }
-  return destinations;
-};
+const createDestinations = () => CITIES_LIST.map(createDestination);
 
 const createOffer = () => ({
   id: generateOfferId(),
@@ -75,22 +68,15 @@ const createOfferGroup = (type) => ({
   offers: Array.from({ length: getRandomInteger(MIN_OFFER_COUNT, MAX_OFFER_COUNT) }, createOffer)
 });
 
-const createOffers = () => {
-  const offers = [];
-  for (let i = 0; i < EVENT_TYPES_LIST.length; i++) {
-    const offerGroup = createOfferGroup(EVENT_TYPES_LIST[i]);
-    offers.push(offerGroup);
-  }
-  return offers;
-};
+const createOffers = () => EVENT_TYPES_LIST.map(createOfferGroup);
 
 const mockDestinations = createDestinations();
 const mockOffers = createOffers();
 
-
-const getOffersByType = (type) => {
+const getOfferIdsByType = (type) => {
   const offerGroup = mockOffers.find((item) => item.type === type);
-  return offerGroup ? offerGroup.offers : [];
+  const offersIds = offerGroup.offers.map((offer) => offer.id);
+  return offersIds;
 };
 
 const createEvent = (type) => ({
@@ -100,15 +86,15 @@ const createEvent = (type) => ({
   dateTo: new Date(Date.now() + getRandomInteger(3600000, 86400000)),
   destination: getRandomArrayElement(mockDestinations).id,
   isFavorite: Math.random() > 0.5,
-  offers: getOffersByType(type),
+  offers: getOfferIdsByType(type),
   type
 });
 
 const createEventArray = (qty) =>
-  Array.from({ length: qty }, () => {
-    createEvent(getRandomArrayElement(EVENT_TYPES_LIST));
-  });
+  Array.from({ length: qty }, () =>
+    createEvent(getRandomArrayElement(EVENT_TYPES_LIST))
+  );
 
 const mockEvents = createEventArray(getRandomInteger(1, 10));
 
-export { mockEvents };
+export { mockEvents, mockDestinations, mockOffers };
