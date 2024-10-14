@@ -95,6 +95,6 @@ const createEventArray = (qty) =>
     createEvent(getRandomArrayElement(EVENT_TYPES_LIST))
   );
 
-const mockEvents = createEventArray(getRandomInteger(1, 10));
+const mockEvents = createEventArray(getRandomInteger(2, 10));
 
 export { mockEvents, mockDestinations, mockOffers };
