@@ -1,6 +1,35 @@
 import { createElement } from '../render.js';
 
-function createEventEditFormTemplate() {
+// НУЖНО ОБРАБОТАТЬ:
+// cheched в выкидном списки типа события
+//
+const BLANK_EVENT = {
+  basePrice: 0,
+  dateFrom: new Date(),
+  dateTo: new Date(Date.now() + 3600000),
+  destination: null,
+  isFavorite: false,
+  offers: [],
+  type: 'flight'
+};
+
+
+function createEventEditFormTemplate(event) {
+
+  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } = event;
+
+  // const startShortDate = humanizeDate(dateFrom, DATE_FORMATS.SHORT_DATE);
+  // const startFullDate = humanizeDate(dateFrom, DATE_FORMATS.FULL_DATE);
+  // const startFullDateTime = humanizeDate(dateFrom, DATE_FORMATS.FULL_DATE_TIME);
+  // const startTime = humanizeDate(dateFrom, DATE_FORMATS.TIME);
+
+  // const endFullDateTime = humanizeDate(dateTo, DATE_FORMATS.FULL_DATE_TIME);
+  // const endTime = humanizeDate(dateTo, DATE_FORMATS.TIME);
+
+  // const duration = getDateDifference(dateFrom, dateTo);
+
+  // const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -8,7 +37,7 @@ function createEventEditFormTemplate() {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -182,8 +211,12 @@ function createEventEditFormTemplate() {
 }
 
 export default class EventEditFormView {
+  constructor({ event = BLANK_EVENT }) {
+    this.event = event;
+  }
+
   getTemplate() {
-    return createEventEditFormTemplate();
+    return createEventEditFormTemplate(this.event);
   }
 
   getElement() {
