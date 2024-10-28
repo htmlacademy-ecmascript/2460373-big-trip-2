@@ -17,6 +17,7 @@ function createOfferListTemplate(offers) {
   }
 
   const offerTemplates = offers.map((offer) => createOfferTemplate(offer)).join('');
+
   return (
     `<ul class="event__selected-offers">
       ${offerTemplates}

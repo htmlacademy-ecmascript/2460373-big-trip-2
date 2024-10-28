@@ -36,29 +36,33 @@ const generateEventId = createRandomIdGeneratorFromRange(100, 199);
 const generateDestinationId = createRandomIdGeneratorFromRange(200, 299);
 const generateOfferId = createRandomIdGeneratorFromRange(300, 399);
 
-const generatePictures = (qty) => {
-  const pictures = [];
-  const createPicture = () => ({
-    src: 'http://picsum.photos/300/200',
-    description: 'Picture description'
-  });
-  for (let i = 0; i < qty; i++) {
-    pictures.push(createPicture());
-  }
-  return pictures;
-};
+const createPicture = () => ({
+  src: 'http://picsum.photos/300/200',
+  description: 'Picture description'
+});
+
+// УДАЛИТЬ, ЕСЛИ ХВАТАЕТ Array.from И createPicture
+// const generatePictures = (qty) => {
+//   const pictures = [];
+
+//   for (let i = 0; i < qty; i++) {
+//     pictures.push(createPicture());
+//   }
+
+//   return pictures;
+// };
 
 const createDestination = (cityName) => ({
-  id: generateDestinationId(),
+  id: generateDestinationId().toString(),
   description: `${cityName} — is a beautiful city`,
   name: cityName,
-  pictures: generatePictures(getRandomInteger(MIN_PICTURE_COUNT, MAX_PICTURE_COUNT))
+  pictures: Array.from({length: getRandomInteger(MIN_PICTURE_COUNT, MAX_PICTURE_COUNT) }, createPicture)
 });
 
 const createDestinations = () => CITIES_LIST.map(createDestination);
 
 const createOffer = () => ({
-  id: generateOfferId(),
+  id: generateOfferId().toString(),
   title: 'Make better',
   price: getRandomInteger(MIN_OFFER_PRICE, MAX_OFFER_PRICE)
 });
@@ -80,7 +84,7 @@ const getOfferIdsByType = (type) => {
 };
 
 const createEvent = (type) => ({
-  id: generateEventId(),
+  id: generateEventId().toString(),
   basePrice: getRandomInteger(100, 3000),
   dateFrom: new Date(),
   dateTo: new Date(Date.now() + getRandomInteger(3600000, 86400000)),
@@ -95,6 +99,8 @@ const createEventArray = (qty) =>
     createEvent(getRandomArrayElement(EVENT_TYPES_LIST))
   );
 
-const mockEvents = createEventArray(getRandomInteger(2, 10));
+const generateMockEvents = () => createEventArray(getRandomInteger(2, 10));
+const getMockDestinations = () => mockDestinations;
+const getMockOffers = () => mockOffers;
 
-export { mockEvents, mockDestinations, mockOffers };
+export { generateMockEvents, getMockDestinations, getMockOffers };
