@@ -11,6 +11,8 @@ export default class TripsPresenter {
   constructor({ listContainer, eventsModel }) {
     this.listContainer = listContainer;
     this.eventsModel = eventsModel;
+
+    console.log(this.eventsModel);
   }
 
   init() {
@@ -18,10 +20,24 @@ export default class TripsPresenter {
 
     render(new SortView(), this.listContainer);
     render(this.listComponent, this.listContainer);
-    render(new EventEditFormView({ event: this.listEvents[0] }), this.listComponent.getElement());
+    render(
+      new EventEditFormView(
+        {
+          event: this.listEvents[0],
+          // offers: this.eventsModel.getOffers()
+        }),
+      this.listComponent.getElement()
+    );
 
     for (let i = 1; i < this.listEvents.length; i++) {
-      render(new EventView({ event: this.listEvents[i] }), this.listComponent.getElement());
+      render(
+        new EventView({
+          event: this.listEvents[i],
+          destination: this.eventsModel.getDestinationById(this.listEvents[i].destination),
+          offers: this.eventsModel.getOffersByType(this.listEvents[i].type)
+        }),
+        this.listComponent.getElement()
+      );
     }
   }
 }

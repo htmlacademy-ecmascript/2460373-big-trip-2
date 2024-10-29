@@ -25,8 +25,8 @@ function createOfferListTemplate(offers) {
   );
 }
 
-function createEventTemplate(event) {
-  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } = event;
+function createEventTemplate(event, destination, offers) {
+  const { basePrice, dateFrom, dateTo, isFavorite, type } = event;
 
   const startShortDate = humanizeDate(dateFrom, DATE_FORMATS.SHORT_DATE);
   const startFullDate = humanizeDate(dateFrom, DATE_FORMATS.FULL_DATE);
@@ -77,12 +77,21 @@ function createEventTemplate(event) {
 }
 
 export default class EventView {
-  constructor({ event }) {
+  constructor({ event, destination, offers }) {
     this.event = event;
+    this.destination = destination;
+    this.allOffers = offers;
+  }
+
+  getEventOffers() {
+    this.offers = this.allOffers.filter((offer) =>
+      this.event.offers.some((v) => v === offer.id));
+
+    return this.offers;
   }
 
   getTemplate() {
-    return createEventTemplate(this.event);
+    return createEventTemplate(this.event, this.destination, this.getEventOffers());
   }
 
   getElement() {
