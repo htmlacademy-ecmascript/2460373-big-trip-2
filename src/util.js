@@ -1,8 +1,21 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
+const EVENT_TYPES_LIST = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant'
+];
+
 const DATE_FORMATS = {
   SHORT_DATE: 'MMM DD',
+  SHORT_DATE_TIME: 'DD/MM/YY HH:mm',
   FULL_DATE: 'YYYY-MM-DD',
   FULL_DATE_TIME: 'YYYY-MM-DD[T]HH:mm',
   TIME: 'HH:mm',
@@ -50,4 +63,4 @@ const getDateDifference = (earlierDate, laterDate) => {
   return difference;
 };
 
-export { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, humanizeDate, DATE_FORMATS, getDateDifference };
+export { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, humanizeDate, DATE_FORMATS, getDateDifference, EVENT_TYPES_LIST };

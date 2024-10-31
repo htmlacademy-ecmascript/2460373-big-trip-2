@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange } from '../util.js';
+import { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, EVENT_TYPES_LIST } from '../util.js';
 
 const MIN_PICTURE_COUNT = 0;
 const MAX_PICTURE_COUNT = 5;
@@ -20,43 +20,20 @@ const CITIES_LIST = [
   'Rome'
 ];
 
-const EVENT_TYPES_LIST = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-];
-
 const generateEventId = createRandomIdGeneratorFromRange(100, 199);
 const generateDestinationId = createRandomIdGeneratorFromRange(200, 299);
 const generateOfferId = createRandomIdGeneratorFromRange(300, 399);
 
 const createPicture = () => ({
-  src: 'http://picsum.photos/300/200',
+  src: `http://picsum.photos/300/200?random=${Math.random()}`,
   description: 'Picture description'
 });
-
-// УДАЛИТЬ, ЕСЛИ ХВАТАЕТ Array.from И createPicture
-// const generatePictures = (qty) => {
-//   const pictures = [];
-
-//   for (let i = 0; i < qty; i++) {
-//     pictures.push(createPicture());
-//   }
-
-//   return pictures;
-// };
 
 const createDestination = (cityName) => ({
   id: generateDestinationId().toString(),
   description: `${cityName} — is a beautiful city`,
   name: cityName,
-  pictures: Array.from({length: getRandomInteger(MIN_PICTURE_COUNT, MAX_PICTURE_COUNT) }, createPicture)
+  pictures: Array.from({ length: getRandomInteger(MIN_PICTURE_COUNT, MAX_PICTURE_COUNT) }, createPicture)
 });
 
 const createDestinations = () => CITIES_LIST.map(createDestination);
@@ -79,8 +56,8 @@ const mockOffers = createOffers();
 
 const getOfferIdsByType = (type) => {
   const offerGroup = mockOffers.find((item) => item.type === type);
-  const offersIds = offerGroup.offers.map((offer) => offer.id);
-  return offersIds;
+
+  return offerGroup.offers.map((offer) => offer.id);
 };
 
 const createEvent = (type) => ({

@@ -84,10 +84,8 @@ export default class EventView {
   }
 
   getEventOffers() {
-    this.offers = this.allOffers.filter((offer) =>
+    return this.allOffers.filter((offer) =>
       this.event.offers.some((v) => v === offer.id));
-
-    return this.offers;
   }
 
   getTemplate() {

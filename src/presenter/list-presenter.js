@@ -11,8 +11,6 @@ export default class TripsPresenter {
   constructor({ listContainer, eventsModel }) {
     this.listContainer = listContainer;
     this.eventsModel = eventsModel;
-
-    console.log(this.eventsModel);
   }
 
   init() {
@@ -23,8 +21,10 @@ export default class TripsPresenter {
     render(
       new EventEditFormView(
         {
-          event: this.listEvents[0],
-          // offers: this.eventsModel.getOffers()
+          // event: this.listEvents[0],
+          eventDestination: this.eventsModel.getDestinationById(this.listEvents[0].destination),
+          destinations: this.eventsModel.destinations,
+          offers: this.eventsModel.offers
         }),
       this.listComponent.getElement()
     );
