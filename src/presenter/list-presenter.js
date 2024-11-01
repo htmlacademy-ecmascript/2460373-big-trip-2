@@ -21,10 +21,11 @@ export default class TripsPresenter {
     render(
       new EventEditFormView(
         {
-          // event: this.listEvents[0],
+          event: this.listEvents[0],
           eventDestination: this.eventsModel.getDestinationById(this.listEvents[0].destination),
           destinations: this.eventsModel.destinations,
-          offers: this.eventsModel.offers
+          offers: this.eventsModel.offers,
+          isEditMode: true
         }),
       this.listComponent.getElement()
     );
