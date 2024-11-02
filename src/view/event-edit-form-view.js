@@ -79,12 +79,16 @@ function createDestinationSectionTemplate(eventDestination) {
 
 }
 
-function createOffersListTemplate(event, allOffersByType) {
+function createOffersListTemplate(event, allOffersByType, eventId) {
   return allOffersByType.map((offer) => (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox"
-        name="event-offer-${offer.id}" ${event.offers.includes(offer.id) ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-${offer.id}">
+      <input
+        class="event__offer-checkbox  visually-hidden"
+        id="event-offer-${offer.id}-${eventId}"
+        type="checkbox"
+        name="event-offer-${offer.id}-${eventId}" ${event.offers.includes(offer.id) ? 'checked' : ''}
+      >
+      <label class="event__offer-label" for="event-offer-${offer.id}-${eventId}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
@@ -93,7 +97,7 @@ function createOffersListTemplate(event, allOffersByType) {
   )).join('');
 }
 
-function createOffersSectionTemplate(event, allOffers) {
+function createOffersSectionTemplate(event, allOffers, eventId) {
   const targetTypeOffers = allOffers.find((item) => item.type === event.type).offers;
 
   if (!targetTypeOffers.length) {
@@ -104,7 +108,7 @@ function createOffersSectionTemplate(event, allOffers) {
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-        ${createOffersListTemplate(event, targetTypeOffers)}
+        ${createOffersListTemplate(event, targetTypeOffers, eventId)}
       </div>
     </section>`
   );
@@ -179,7 +183,7 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
           ${createRollupButtonTemplate(isEditMode)}
         </header>
         <section class="event__details">
-          ${createOffersSectionTemplate(event, offers)}
+          ${createOffersSectionTemplate(event, offers, id)}
           ${createDestinationSectionTemplate(eventDestination)}
         </section>
       </form>
