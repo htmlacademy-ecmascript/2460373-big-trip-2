@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Степан Пинаколада](https://up.htmlacademy.ru/ecmascript-individual/2/user/2460373).
-* Наставник: [Алексей Хабиров](https://htmlacademy.ru/profile/alex_khab).
+* Наставник: [Анастасия Гущина](https://htmlacademy.ru/profile/vanastasiya).
 
 ---
 
