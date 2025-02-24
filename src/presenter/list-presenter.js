@@ -2,7 +2,7 @@ import EventEditFormView from '../view/event-edit-form-view.js';
 import EventView from '../view/event-view.js';
 import ListView from '../view/list-view.js';
 import SortView from '../view/sort-view.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 export default class TripsPresenter {
 
@@ -27,7 +27,7 @@ export default class TripsPresenter {
           offers: this.eventsModel.offers,
           isEditMode: true
         }),
-      this.listComponent.getElement()
+      this.listComponent.element
     );
 
     for (let i = 1; i < this.listEvents.length; i++) {
@@ -37,7 +37,7 @@ export default class TripsPresenter {
           destination: this.eventsModel.getDestinationById(this.listEvents[i].destination),
           offers: this.eventsModel.getOffersByType(this.listEvents[i].type)
         }),
-        this.listComponent.getElement()
+        this.listComponent.element
       );
     }
   }

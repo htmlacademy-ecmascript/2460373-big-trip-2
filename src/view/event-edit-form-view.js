@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
 import { EVENT_TYPES_LIST, capitalizeFirstLetter, DATE_FORMATS, humanizeDate } from '../util.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_EVENT = {
   basePrice: '',
@@ -191,8 +191,9 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
   );
 }
 
-export default class EventEditFormView {
+export default class EventEditFormView extends AbstractView {
   constructor({ event = BLANK_EVENT, eventDestination = BLANK_EVENT.destination, destinations, offers, isEditMode }) {
+    super();
     this.event = event;
     this.eventDestination = eventDestination;
     this.destinations = destinations;
@@ -200,7 +201,7 @@ export default class EventEditFormView {
     this.isEditMode = isEditMode;
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditFormTemplate(
       this.event,
       this.eventDestination,
@@ -208,17 +209,5 @@ export default class EventEditFormView {
       this.offers,
       this.isEditMode
     );
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
