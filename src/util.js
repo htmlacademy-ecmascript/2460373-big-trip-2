@@ -15,7 +15,7 @@ const EVENT_TYPES_LIST = [
   'restaurant'
 ];
 
-const DATE_FORMATS = {
+const DateFormats = {
   SHORT_DATE: 'MMM DD',
   SHORT_DATE_TIME: 'DD/MM/YY HH:mm',
   FULL_DATE: 'YYYY-MM-DD',
@@ -59,8 +59,8 @@ const getDateDifference = (earlierDate, laterDate) => {
   const date2 = dayjs(earlierDate);
   const difference = dayjs.duration(date1.diff(date2));
 
-  return difference.format(DATE_FORMATS.FULL_TIME).replace(/\b00D 00H\b/, '').replace(/\b00D\b/, '');
+  return difference.format(DateFormats.FULL_TIME).replace(/\b00D 00H\b/, '').replace(/\b00D\b/, '');
 };
 
 
-export { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, humanizeDate, DATE_FORMATS, getDateDifference, EVENT_TYPES_LIST };
+export { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, humanizeDate, DateFormats, getDateDifference, EVENT_TYPES_LIST };
