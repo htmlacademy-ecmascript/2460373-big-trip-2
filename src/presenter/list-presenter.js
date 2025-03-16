@@ -5,19 +5,20 @@ import SortView from '../view/sort-view.js';
 import { render } from '../framework/render.js';
 
 export default class TripsPresenter {
-
-  listComponent = new ListView();
+  #listContainer = null;
+  #eventsModel = null;
+  #listComponent = new ListView();
 
   constructor({ listContainer, eventsModel }) {
-    this.listContainer = listContainer;
-    this.eventsModel = eventsModel;
+    this.#listContainer = listContainer;
+    this.#eventsModel = eventsModel;
   }
 
   init() {
-    this.listEvents = [...this.eventsModel.getEvents()];
+    this.listEvents = [...this.#eventsModel.events];
 
-    render(new SortView(), this.listContainer);
-    render(this.listComponent, this.listContainer);
+    render(new SortView(), this.#listContainer);
+    render(this.#listComponent, this.#listContainer);
     render(
       new EventEditFormView(
         {
@@ -34,8 +35,8 @@ export default class TripsPresenter {
       render(
         new EventView({
           event: this.listEvents[i],
-          destination: this.eventsModel.getDestinationById(this.listEvents[i].destination),
-          offers: this.eventsModel.getOffersByType(this.listEvents[i].type)
+          destination: this.#eventsModel.getDestinationById(this.listEvents[i].destination),
+          offers: this.#eventsModel.getOffersByType(this.listEvents[i].type)
         }),
         this.listComponent.element
       );
