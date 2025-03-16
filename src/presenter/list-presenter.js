@@ -27,12 +27,12 @@ export default class TripsPresenter {
 
   renderEvent({ index }) {
     const event = this.listEvents[index];
-    const destination = this.#eventsModel.getDestinationById(this.listEvents[index].destination);
+    const destination = this.#eventsModel.getDestinationById(event.destination);
 
     const eventComponent = new EventView({
       event,
       destination,
-      offers: this.#eventsModel.getOffersByType(this.listEvents[index].type),
+      offers: this.#eventsModel.getOffersByType(event.type),
       onEditClick
     });
 
