@@ -40,8 +40,8 @@ function createEventTemplate(event, destination, offers) {
 
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  return (
-    `<li class="trip-events__item">
+  return (`
+    <li class="trip-events__item">
       <div class="event">
         <time class="event__date" datetime="${startFullDate}">${startShortDate.toUpperCase()}</time>
         <div class="event__type">
@@ -77,12 +77,23 @@ function createEventTemplate(event, destination, offers) {
 }
 
 export default class EventView extends AbstractView {
-  constructor({ event, destination, offers }) {
+  #handleEditClick = null;
+
+  constructor({ event, destination, offers, onEditClick }) {
     super();
     this.event = event;
     this.destination = destination;
     this.allOffers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 
   getEventOffers() {
     return this.allOffers.filter((offer) =>

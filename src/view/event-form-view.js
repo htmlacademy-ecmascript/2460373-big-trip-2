@@ -191,15 +191,36 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
   );
 }
 
-export default class EventEditFormView extends AbstractView {
-  constructor({ event = BLANK_EVENT, eventDestination = BLANK_EVENT.destination, destinations, offers, isEditMode }) {
+export default class EventFormView extends AbstractView {
+  #handleFormSubmit = null;
+  #handleCloseClick = null;
+
+  constructor({ event = BLANK_EVENT, eventDestination = BLANK_EVENT.destination, destinations, offers, isEditMode, onFormSubmit, onCloseClick }) {
     super();
     this.event = event;
     this.eventDestination = eventDestination;
     this.destinations = destinations;
     this.offers = offers;
     this.isEditMode = isEditMode;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleCloseClick = onCloseClick;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#closeClickHandler);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleCloseClick();
+  };
 
   get template() {
     return createEventEditFormTemplate(
