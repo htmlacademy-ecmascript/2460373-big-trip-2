@@ -1,4 +1,6 @@
-import { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, EVENT_TYPES_LIST } from '../util.js';
+import { getRandomInteger } from '../utils/common.js';
+import { EVENT_TYPES_LIST } from '../utils/common.js';
+import { getRandomArrayElement, createRandomIdGeneratorFromRange } from '../utils/common.js';
 
 const MIN_PICTURE_COUNT = 0;
 const MAX_PICTURE_COUNT = 5;
@@ -76,7 +78,7 @@ const createEventArray = (qty) =>
     createEvent(getRandomArrayElement(EVENT_TYPES_LIST))
   );
 
-const generateMockEvents = () => createEventArray(getRandomInteger(2, 10));
+const generateMockEvents = () => createEventArray(getRandomInteger(0, 2));
 const getMockDestinations = () => mockDestinations;
 const getMockOffers = () => mockOffers;
 

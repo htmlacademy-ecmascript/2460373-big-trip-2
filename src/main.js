@@ -14,7 +14,10 @@ const listPresenter = new ListPresenter({
   eventsModel
 });
 
-render(new TripInfoView(), tripMainContainer, RenderPosition.AFTERBEGIN);
+if (eventsModel.events.length) {
+  render(new TripInfoView(), tripMainContainer, RenderPosition.AFTERBEGIN);
+}
+
 render(new FilterView(), filterContainer);
 
 listPresenter.init();

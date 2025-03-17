@@ -1,4 +1,6 @@
-import { EVENT_TYPES_LIST, capitalizeFirstLetter, DateFormat, humanizeDate } from '../util.js';
+import { DateFormat, humanizeDate } from '../utils/date.js';
+import { EVENT_TYPES_LIST } from '../utils/common.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_EVENT = {
