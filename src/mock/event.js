@@ -64,7 +64,7 @@ const createEvent = (type) => ({
   id: generateEventId().toString(),
   basePrice: getRandomInteger(100, 3000),
   dateFrom: new Date(),
-  dateTo: new Date(Date.now() + getRandomInteger(3600000, 86400000)),
+  dateTo: new Date(Date.now() + getRandomInteger(36000, 172800000)),
   destination: getRandomArrayElement(mockDestinations).id,
   isFavorite: Math.random() > 0.5,
   offers: getOfferIdsByType(type),

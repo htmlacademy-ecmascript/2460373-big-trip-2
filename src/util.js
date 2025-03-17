@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
+dayjs.extend(duration);
+
 const EVENT_TYPES_LIST = [
   'taxi',
   'bus',
@@ -13,16 +15,15 @@ const EVENT_TYPES_LIST = [
   'restaurant'
 ];
 
-const DATE_FORMATS = {
+const DateFormat = {
   SHORT_DATE: 'MMM DD',
   SHORT_DATE_TIME: 'DD/MM/YY HH:mm',
   FULL_DATE: 'YYYY-MM-DD',
   FULL_DATE_TIME: 'YYYY-MM-DD[T]HH:mm',
   TIME: 'HH:mm',
+  FULL_TIME: 'DD[D] HH[H] mm[M]',
   MINUTES: 'mm[M]'
 };
-
-dayjs.extend(duration);
 
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -53,14 +54,13 @@ const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + strin
 
 const humanizeDate = (date, format) => date ? dayjs(date).format(format) : '';
 
-const addLeadingZero = (number) => String(number).padStart(2, '0');
-
 const getDateDifference = (earlierDate, laterDate) => {
-  let minutes = dayjs(laterDate).diff(dayjs(earlierDate), 'minute');
-  const hours = Math.floor(minutes / 60);
-  minutes = minutes - (hours * 60);
-  const difference = `${addLeadingZero(hours)}H ${addLeadingZero(minutes)}M`;
-  return difference;
+  const date1 = dayjs(laterDate);
+  const date2 = dayjs(earlierDate);
+  const difference = dayjs.duration(date1.diff(date2));
+
+  return difference.format(DateFormat.FULL_TIME).replace(/\b00D 00H\b/, '').replace(/\b00D\b/, '');
 };
 
-export { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, humanizeDate, DATE_FORMATS, getDateDifference, EVENT_TYPES_LIST };
+
+export { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, humanizeDate, DateFormat, getDateDifference, EVENT_TYPES_LIST };

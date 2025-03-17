@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
-import { capitalizeFirstLetter, humanizeDate, DATE_FORMATS, getDateDifference } from '../util.js';
+import { capitalizeFirstLetter, humanizeDate, DateFormat, getDateDifference } from '../util.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferTemplate({ title, price }) {
   return (
@@ -28,20 +28,20 @@ function createOfferListTemplate(offers) {
 function createEventTemplate(event, destination, offers) {
   const { basePrice, dateFrom, dateTo, isFavorite, type } = event;
 
-  const startShortDate = humanizeDate(dateFrom, DATE_FORMATS.SHORT_DATE);
-  const startFullDate = humanizeDate(dateFrom, DATE_FORMATS.FULL_DATE);
-  const startFullDateTime = humanizeDate(dateFrom, DATE_FORMATS.FULL_DATE_TIME);
-  const startTime = humanizeDate(dateFrom, DATE_FORMATS.TIME);
+  const startShortDate = humanizeDate(dateFrom, DateFormat.SHORT_DATE);
+  const startFullDate = humanizeDate(dateFrom, DateFormat.FULL_DATE);
+  const startFullDateTime = humanizeDate(dateFrom, DateFormat.FULL_DATE_TIME);
+  const startTime = humanizeDate(dateFrom, DateFormat.TIME);
 
-  const endFullDateTime = humanizeDate(dateTo, DATE_FORMATS.FULL_DATE_TIME);
-  const endTime = humanizeDate(dateTo, DATE_FORMATS.TIME);
+  const endFullDateTime = humanizeDate(dateTo, DateFormat.FULL_DATE_TIME);
+  const endTime = humanizeDate(dateTo, DateFormat.TIME);
 
   const duration = getDateDifference(dateFrom, dateTo);
 
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
-  return (
-    `<li class="trip-events__item">
+  return (`
+    <li class="trip-events__item">
       <div class="event">
         <time class="event__date" datetime="${startFullDate}">${startShortDate.toUpperCase()}</time>
         <div class="event__type">
@@ -76,31 +76,31 @@ function createEventTemplate(event, destination, offers) {
   );
 }
 
-export default class EventView {
-  constructor({ event, destination, offers }) {
+export default class EventView extends AbstractView {
+  #handleEditClick = null;
+
+  constructor({ event, destination, offers, onEditClick }) {
+    super();
     this.event = event;
     this.destination = destination;
     this.allOffers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 
   getEventOffers() {
     return this.allOffers.filter((offer) =>
       this.event.offers.some((v) => v === offer.id));
   }
 
-  getTemplate() {
+  get template() {
     return createEventTemplate(this.event, this.destination, this.getEventOffers());
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
