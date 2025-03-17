@@ -21,12 +21,11 @@ export default class TripsPresenter {
     render(this.#listComponent, this.#listContainer);
 
     for (let i = 1; i < this.listEvents.length; i++) {
-      this.renderEvent({ index: i });
+      this.renderEvent(this.listEvents[i]);
     }
   }
 
-  renderEvent({ index }) {
-    const event = this.listEvents[index];
+  renderEvent(event) {
     const destination = this.#eventsModel.getDestinationById(event.destination);
 
     const eventComponent = new EventView({

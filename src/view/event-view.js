@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, humanizeDate, DateFormats, getDateDifference } from '../util.js';
+import { capitalizeFirstLetter, humanizeDate, DateFormat, getDateDifference } from '../util.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferTemplate({ title, price }) {
@@ -28,13 +28,13 @@ function createOfferListTemplate(offers) {
 function createEventTemplate(event, destination, offers) {
   const { basePrice, dateFrom, dateTo, isFavorite, type } = event;
 
-  const startShortDate = humanizeDate(dateFrom, DateFormats.SHORT_DATE);
-  const startFullDate = humanizeDate(dateFrom, DateFormats.FULL_DATE);
-  const startFullDateTime = humanizeDate(dateFrom, DateFormats.FULL_DATE_TIME);
-  const startTime = humanizeDate(dateFrom, DateFormats.TIME);
+  const startShortDate = humanizeDate(dateFrom, DateFormat.SHORT_DATE);
+  const startFullDate = humanizeDate(dateFrom, DateFormat.FULL_DATE);
+  const startFullDateTime = humanizeDate(dateFrom, DateFormat.FULL_DATE_TIME);
+  const startTime = humanizeDate(dateFrom, DateFormat.TIME);
 
-  const endFullDateTime = humanizeDate(dateTo, DateFormats.FULL_DATE_TIME);
-  const endTime = humanizeDate(dateTo, DateFormats.TIME);
+  const endFullDateTime = humanizeDate(dateTo, DateFormat.FULL_DATE_TIME);
+  const endTime = humanizeDate(dateTo, DateFormat.TIME);
 
   const duration = getDateDifference(dateFrom, dateTo);
 

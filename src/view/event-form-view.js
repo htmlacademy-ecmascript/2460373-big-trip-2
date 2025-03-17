@@ -1,4 +1,4 @@
-import { EVENT_TYPES_LIST, capitalizeFirstLetter, DateFormats, humanizeDate } from '../util.js';
+import { EVENT_TYPES_LIST, capitalizeFirstLetter, DateFormat, humanizeDate } from '../util.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_EVENT = {
@@ -127,8 +127,8 @@ function createRollupButtonTemplate(isEditMode) {
 function createEventEditFormTemplate(event, eventDestination, destinations, offers, isEditMode) {
   const { id, basePrice, dateFrom, dateTo, type } = event;
 
-  const startDate = humanizeDate(dateFrom, DateFormats.SHORT_DATE_TIME);
-  const endDate = humanizeDate(dateTo, DateFormats.SHORT_DATE_TIME);
+  const startDate = humanizeDate(dateFrom, DateFormat.SHORT_DATE_TIME);
+  const endDate = humanizeDate(dateTo, DateFormat.SHORT_DATE_TIME);
 
   return (
     `<li class="trip-events__item">
