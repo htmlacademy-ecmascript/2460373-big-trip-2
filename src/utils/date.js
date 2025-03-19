@@ -1,7 +1,11 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
 dayjs.extend(duration);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 const DateFormat = {
   SHORT_DATE: 'MMM DD',
@@ -23,4 +27,27 @@ const getDateDifference = (earlierDate, laterDate) => {
   return difference.format(DateFormat.FULL_TIME).replace(/\b00D 00H\b/, '').replace(/\b00D\b/, '');
 };
 
-export { humanizeDate, DateFormat, getDateDifference };
+const isEventInFuture = (event) => {
+  const startDate = dayjs(event.dateFrom);
+  const now = dayjs();
+  return startDate && startDate.isAfter(now, 'day');
+};
+
+const isEventInPresent = (event) => {
+  const startDate = dayjs(event.dateFrom);
+  const endDate = dayjs(event.dateTo);
+  const now = dayjs();
+
+  const hasStarted = startDate && startDate.isSameOrBefore(now, 'day');
+  const isContinuing = endDate && endDate.isSameOrAfter(now, 'day');
+
+  return hasStarted && isContinuing;
+};
+
+const isEventInPast = (event) => {
+  const endDate = dayjs(event.dateTo);
+  const now = dayjs();
+  return endDate && endDate.isBefore(now, 'day');
+};
+
+export { DateFormat, humanizeDate, getDateDifference, isEventInFuture, isEventInPresent, isEventInPast };
