@@ -30,7 +30,7 @@ const generateDestinationId = createRandomIdGeneratorFromRange(200, 299);
 const generateOfferId = createRandomIdGeneratorFromRange(300, 399);
 
 const createPicture = () => ({
-  src: `http://picsum.photos/300/200?random=${Math.random()}`,
+  src: `https://picsum.photos/300/200?random=${Math.random()}`,
   description: 'Picture description'
 });
 
