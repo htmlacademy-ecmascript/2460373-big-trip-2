@@ -1,4 +1,5 @@
-import { capitalizeFirstLetter, humanizeDate, DateFormat, getDateDifference } from '../util.js';
+import { humanizeDate, DateFormat, getDateDifference } from '../utils/date.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createOfferTemplate({ title, price }) {

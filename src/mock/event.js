@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, EVENT_TYPES_LIST } from '../util.js';
+import { EVENT_TYPES_LIST, getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange } from '../utils/common.js';
 
 const MIN_PICTURE_COUNT = 0;
 const MAX_PICTURE_COUNT = 5;
@@ -20,12 +20,17 @@ const CITIES_LIST = [
   'Rome'
 ];
 
+const TimeRangeMs = {
+  TWO_HOURS: 2 * 60 * 60 * 1000,
+  SEVEN_DAYS: 7 * 24 * 60 * 60 * 1000
+};
+
 const generateEventId = createRandomIdGeneratorFromRange(100, 199);
 const generateDestinationId = createRandomIdGeneratorFromRange(200, 299);
 const generateOfferId = createRandomIdGeneratorFromRange(300, 399);
 
 const createPicture = () => ({
-  src: `http://picsum.photos/300/200?random=${Math.random()}`,
+  src: `https://picsum.photos/300/200?random=${Math.random()}`,
   description: 'Picture description'
 });
 
@@ -60,23 +65,30 @@ const getOfferIdsByType = (type) => {
   return offerGroup.offers.map((offer) => offer.id);
 };
 
-const createEvent = (type) => ({
-  id: generateEventId().toString(),
-  basePrice: getRandomInteger(100, 3000),
-  dateFrom: new Date(),
-  dateTo: new Date(Date.now() + getRandomInteger(36000, 172800000)),
-  destination: getRandomArrayElement(mockDestinations).id,
-  isFavorite: Math.random() > 0.5,
-  offers: getOfferIdsByType(type),
-  type
-});
+const createEvent = (type) => {
+  const now = Date.now();
+
+  const dateFrom = new Date(now + getRandomInteger(-TimeRangeMs.SEVEN_DAYS, TimeRangeMs.SEVEN_DAYS));
+  const dateTo = new Date(dateFrom.getTime() + getRandomInteger(TimeRangeMs.TWO_HOURS, TimeRangeMs.SEVEN_DAYS));
+
+  return {
+    id: generateEventId().toString(),
+    basePrice: getRandomInteger(100, 3000),
+    dateFrom,
+    dateTo,
+    destination: getRandomArrayElement(mockDestinations).id,
+    isFavorite: Math.random() > 0.5,
+    offers: getOfferIdsByType(type),
+    type
+  };
+};
 
 const createEventArray = (qty) =>
   Array.from({ length: qty }, () =>
     createEvent(getRandomArrayElement(EVENT_TYPES_LIST))
   );
 
-const generateMockEvents = () => createEventArray(getRandomInteger(2, 10));
+const generateMockEvents = () => createEventArray(getRandomInteger(0, 2));
 const getMockDestinations = () => mockDestinations;
 const getMockOffers = () => mockOffers;
 

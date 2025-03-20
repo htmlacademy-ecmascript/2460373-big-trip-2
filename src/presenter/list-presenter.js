@@ -2,6 +2,7 @@ import EventFormView from '../view/event-form-view.js';
 import EventView from '../view/event-view.js';
 import ListView from '../view/list-view.js';
 import SortView from '../view/sort-view.js';
+import NoEventView from '../view/no-event-view.js';
 import { render, replace } from '../framework/render.js';
 
 export default class TripsPresenter {
@@ -17,10 +18,15 @@ export default class TripsPresenter {
   init() {
     this.listEvents = [...this.#eventsModel.events];
 
+    if (!this.listEvents.length) {
+      render(new NoEventView(), this.#listContainer);
+      return;
+    }
+
     render(new SortView(), this.#listContainer);
     render(this.#listComponent, this.#listContainer);
 
-    for (let i = 1; i < this.listEvents.length; i++) {
+    for (let i = 0; i < this.listEvents.length; i++) {
       this.renderEvent(this.listEvents[i]);
     }
   }
