@@ -54,18 +54,18 @@ export default class EventPresenter {
     }
   };
 
-  #onEditClick() {
+  #onEditClick = () => {
     this.#replaceEventToForm();
     document.addEventListener('keydown', this.#escKeyDownHandler);
-  }
+  };
 
-  #onCloseClick() {
+  #onCloseClick = () => {
     this.#replaceFormToEvent();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-  }
+  };
 
-  #onFormSubmit() {
+  #onFormSubmit = () => {
     this.#replaceFormToEvent();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-  }
+  };
 }

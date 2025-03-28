@@ -96,12 +96,12 @@ export default class EventView extends AbstractView {
     this.#handleEditClick();
   };
 
-  getEventOffers() {
+  #getEventOffers() {
     return this.allOffers.filter((offer) =>
       this.event.offers.some((v) => v === offer.id));
   }
 
   get template() {
-    return createEventTemplate(this.event, this.destination, this.getEventOffers());
+    return createEventTemplate(this.event, this.destination, this.#getEventOffers());
   }
 }
