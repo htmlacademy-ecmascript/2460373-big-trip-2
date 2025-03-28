@@ -5,10 +5,13 @@ import SortView from '../view/sort-view.js';
 import NoEventView from '../view/no-event-view.js';
 import { render, replace } from '../framework/render.js';
 
-export default class TripsPresenter {
+export default class ListPresenter {
   #listContainer = null;
   #eventsModel = null;
+  #listEvents = [];
   #listComponent = new ListView();
+  #sortComponent = new SortView();
+  #noEventComponent = new NoEventView();
 
   constructor({ listContainer, eventsModel }) {
     this.#listContainer = listContainer;
@@ -16,22 +19,26 @@ export default class TripsPresenter {
   }
 
   init() {
-    this.listEvents = [...this.#eventsModel.events];
+    this.#listEvents = [...this.#eventsModel.events];
 
-    if (!this.listEvents.length) {
-      render(new NoEventView(), this.#listContainer);
-      return;
-    }
+    this.#renderList();
 
-    render(new SortView(), this.#listContainer);
-    render(this.#listComponent, this.#listContainer);
-
-    for (let i = 0; i < this.listEvents.length; i++) {
-      this.renderEvent(this.listEvents[i]);
+    for (let i = 0; i < this.#listEvents.length; i++) {
+      this.#renderEvent(this.#listEvents[i]);
     }
   }
 
-  renderEvent(event) {
+  #renderList() {
+    if (!this.#listEvents.length) {
+      render(this.#noEventComponent, this.#listContainer);
+      return;
+    }
+
+    render(this.#sortComponent, this.#listContainer);
+    render(this.#listComponent, this.#listContainer);
+  }
+
+  #renderEvent(event) {
     const destination = this.#eventsModel.getDestinationById(event.destination);
 
     const eventComponent = new EventView({
@@ -50,6 +57,14 @@ export default class TripsPresenter {
       onFormSubmit,
       onCloseClick
     });
+
+    function replaceEventToForm() {
+      replace(eventFormComponent, eventComponent);
+    }
+
+    function replaceFormToEvent() {
+      replace(eventComponent, eventFormComponent);
+    }
 
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
@@ -72,14 +87,6 @@ export default class TripsPresenter {
     function onFormSubmit() {
       replaceFormToEvent();
       document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    function replaceEventToForm() {
-      replace(eventFormComponent, eventComponent);
-    }
-
-    function replaceFormToEvent() {
-      replace(eventComponent, eventFormComponent);
     }
 
     render(eventComponent, this.#listComponent.element);
