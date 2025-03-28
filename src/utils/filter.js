@@ -8,13 +8,14 @@ const FilterType = {
 };
 
 const filter = {
-  [FilterType.EVERYTHING]: (events) => events,
+  [FilterType.EVERYTHING]: (events) => [...events],
   [FilterType.FUTURE]: (events) => events.filter((event) => isEventInFuture(event)),
   [FilterType.PRESENT]: (events) => events.filter((event) => isEventInPresent(event)),
   [FilterType.PAST]: (events) => events.filter((event) => isEventInPast(event)),
 };
 
 // пока не используется, на будущее
+// получается, неправильный регистр у ключа... Должен быть КАПС
 const FilterMessage = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.FUTURE]: 'There are no future events now',

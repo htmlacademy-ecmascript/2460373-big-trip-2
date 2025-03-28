@@ -17,6 +17,7 @@ const listPresenter = new ListPresenter({
 
 const filters = generateFilter(eventsModel.events);
 
+// Понимаю, что эту логику нужно бы в презентер (?) завернуть, но пока так
 if (eventsModel.events.length) {
   render(new TripInfoView(), tripMainContainer, RenderPosition.AFTERBEGIN);
 }
