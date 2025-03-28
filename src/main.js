@@ -11,7 +11,7 @@ const listContainer = document.querySelector('.trip-events');
 const eventsModel = new EventsModel();
 
 const listPresenter = new ListPresenter({
-  listContainer: listContainer,
+  listContainer,
   eventsModel
 });
 

@@ -1,9 +1,8 @@
-import EventFormView from '../view/event-form-view.js';
-import EventView from '../view/event-view.js';
 import ListView from '../view/list-view.js';
 import SortView from '../view/sort-view.js';
 import NoEventView from '../view/no-event-view.js';
-import { render, replace } from '../framework/render.js';
+import EventPresenter from './event-presenter.js';
+import { render } from '../framework/render.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -39,56 +38,11 @@ export default class ListPresenter {
   }
 
   #renderEvent(event) {
-    const destination = this.#eventsModel.getDestinationById(event.destination);
-
-    const eventComponent = new EventView({
-      event,
-      destination,
-      offers: this.#eventsModel.getOffersByType(event.type),
-      onEditClick
+    const eventPresenter = new EventPresenter({
+      model: this.#eventsModel,
+      eventContainer: this.#listComponent.element
     });
 
-    const eventFormComponent = new EventFormView({
-      event,
-      eventDestination: destination,
-      destinations: this.#eventsModel.destinations,
-      offers: this.#eventsModel.offers,
-      isEditMode: true,
-      onFormSubmit,
-      onCloseClick
-    });
-
-    function replaceEventToForm() {
-      replace(eventFormComponent, eventComponent);
-    }
-
-    function replaceFormToEvent() {
-      replace(eventComponent, eventFormComponent);
-    }
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    function onEditClick() {
-      replaceEventToForm();
-      document.addEventListener('keydown', escKeyDownHandler);
-    }
-
-    function onCloseClick() {
-      replaceFormToEvent();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    function onFormSubmit() {
-      replaceFormToEvent();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    render(eventComponent, this.#listComponent.element);
+    eventPresenter.init(event);
   }
 }
