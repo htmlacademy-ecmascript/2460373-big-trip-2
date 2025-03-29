@@ -11,6 +11,7 @@ export default class ListPresenter {
   #listComponent = new ListView();
   #sortComponent = new SortView();
   #noEventComponent = new NoEventView();
+  #eventPresenterAll = new Map();
 
   constructor({ listContainer, eventsModel }) {
     this.#listContainer = listContainer;
@@ -44,5 +45,6 @@ export default class ListPresenter {
     });
 
     eventPresenter.init(event);
+    this.#eventPresenterAll.set(event.id, eventPresenter);
   }
 }
