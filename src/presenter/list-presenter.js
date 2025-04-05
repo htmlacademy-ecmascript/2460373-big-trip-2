@@ -9,13 +9,12 @@ import { SortTypes, sortByPrice, sortByTime, sortByDay } from '../utils/sort.js'
 export default class ListPresenter {
   #listContainer = null;
   #eventsModel = null;
-  #defaultEventsList = [];
   #eventsList = [];
   #listComponent = new ListView();
   #sortComponent = null;
   #noEventComponent = new NoEventView();
   #eventPresenterAll = new Map();
-  #currentSortType = null;
+  #currentSortType = SortTypes.DAY;
 
   constructor({ listContainer, eventsModel }) {
     this.#listContainer = listContainer;
@@ -23,8 +22,7 @@ export default class ListPresenter {
   }
 
   init() {
-    this.#defaultEventsList = [...this.#eventsModel.events].sort(sortByDay);
-    this.#eventsList = this.#defaultEventsList;
+    this.#eventsList = [...this.#eventsModel.events].sort(sortByDay);
 
     this.#sortComponent = new SortView({
       onSortChange: this.#handleSortChange
@@ -67,7 +65,7 @@ export default class ListPresenter {
   #sortEvents(sortType) {
     switch (sortType) {
       case SortTypes.DAY:
-        this.#eventsList = [...this.#defaultEventsList];
+        this.#eventsList.sort(sortByDay);
         break;
       case SortTypes.TIME:
         this.#eventsList.sort(sortByTime);
