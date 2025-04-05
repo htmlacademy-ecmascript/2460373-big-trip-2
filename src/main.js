@@ -11,12 +11,13 @@ const listContainer = document.querySelector('.trip-events');
 const eventsModel = new EventsModel();
 
 const listPresenter = new ListPresenter({
-  listContainer: listContainer,
+  listContainer,
   eventsModel
 });
 
 const filters = generateFilter(eventsModel.events);
 
+// Понимаю, что эту логику нужно бы в презентер (?) завернуть, но пока так
 if (eventsModel.events.length) {
   render(new TripInfoView(), tripMainContainer, RenderPosition.AFTERBEGIN);
 }
