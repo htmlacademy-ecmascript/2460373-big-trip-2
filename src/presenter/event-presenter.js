@@ -2,19 +2,30 @@ import EventFormView from '../view/event-form-view.js';
 import EventView from '../view/event-view.js';
 import { render, replace, remove } from '../framework/render.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class EventPresenter {
   #eventsModel = null;
   #eventContainer = null;
   #event = null;
   #destination = null;
+
+  #mode = Mode.DEFAULT;
+
   #eventComponent = null;
   #eventFormComponent = null;
-  #onDataChange = null;
 
-  constructor({ model, eventContainer, onDataChange }) {
+  #onDataChange = null;
+  #onModeChange = null;
+
+  constructor({ model, eventContainer, onDataChange, onModeChange }) {
     this.#eventsModel = model;
     this.#eventContainer = eventContainer;
     this.#onDataChange = onDataChange;
+    this.#onModeChange = onModeChange;
   }
 
   init(event) {
@@ -61,12 +72,21 @@ export default class EventPresenter {
     remove(prevEventFormComponent);
   }
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToEvent();
+    }
+  }
+
   #replaceEventToForm() {
     replace(this.#eventFormComponent, this.#eventComponent);
+    this.#onModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToEvent() {
     replace(this.#eventComponent, this.#eventFormComponent);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {

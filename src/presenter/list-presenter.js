@@ -43,17 +43,20 @@ export default class ListPresenter {
     const eventPresenter = new EventPresenter({
       model: this.#eventsModel,
       eventContainer: this.#listComponent.element,
-      onDataChange: this.#onEventChange
+      onDataChange: this.#handleEventChange,
+      onModeChange: this.#handleModeChange
     });
 
     eventPresenter.init(event);
     this.#eventPresenterAll.set(event.id, eventPresenter);
   }
 
-  #onEventChange = (updatedEvent) => {
+  #handleEventChange = (updatedEvent) => {
     this.#listEvents = updateEvents(this.#listEvents, updatedEvent);
     this.#eventPresenterAll.get(updatedEvent.id).init(updatedEvent);
   };
 
-  #on
+  #handleModeChange = () => {
+    this.#eventPresenterAll.forEach((presenter) => presenter.resetView());
+  };
 }
