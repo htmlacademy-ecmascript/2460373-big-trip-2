@@ -23,4 +23,13 @@ const FilterMessage = {
   [FilterType.PAST]: 'There are no past events now',
 };
 
-export { filter, FilterMessage };
+function generateFilter(events) {
+  return Object.entries(filter).map(
+    ([filterType, filterEvents]) => ({
+      type: filterType,
+      count: filterEvents(events).length,
+    })
+  );
+}
+
+export { filter, FilterMessage, generateFilter };

@@ -88,7 +88,7 @@ const createEventArray = (qty) =>
     createEvent(getRandomArrayElement(EVENT_TYPES_LIST))
   );
 
-const generateMockEvents = () => createEventArray(getRandomInteger(3, 6));
+const generateMockEvents = () => createEventArray(getRandomInteger(5, 10));
 const getMockDestinations = () => mockDestinations;
 const getMockOffers = () => mockOffers;
 
