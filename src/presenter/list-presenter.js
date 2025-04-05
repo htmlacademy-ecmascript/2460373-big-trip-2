@@ -3,6 +3,7 @@ import SortView from '../view/sort-view.js';
 import NoEventView from '../view/no-event-view.js';
 import EventPresenter from './event-presenter.js';
 import { render } from '../framework/render.js';
+import { updateEvents } from '../utils/common.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -41,10 +42,18 @@ export default class ListPresenter {
   #renderEvent(event) {
     const eventPresenter = new EventPresenter({
       model: this.#eventsModel,
-      eventContainer: this.#listComponent.element
+      eventContainer: this.#listComponent.element,
+      onDataChange: this.#onEventChange
     });
 
     eventPresenter.init(event);
     this.#eventPresenterAll.set(event.id, eventPresenter);
   }
+
+  #onEventChange = (updatedEvent) => {
+    this.#listEvents = updateEvents(this.#listEvents, updatedEvent);
+    this.#eventPresenterAll.get(updatedEvent.id).init(updatedEvent);
+  };
+
+  #on
 }

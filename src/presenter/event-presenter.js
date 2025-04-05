@@ -1,41 +1,64 @@
 import EventFormView from '../view/event-form-view.js';
 import EventView from '../view/event-view.js';
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 
 export default class EventPresenter {
   #eventsModel = null;
   #eventContainer = null;
+  #event = null;
   #destination = null;
   #eventComponent = null;
   #eventFormComponent = null;
+  #onDataChange = null;
 
-  constructor({ model, eventContainer }) {
+  constructor({ model, eventContainer, onDataChange }) {
     this.#eventsModel = model;
     this.#eventContainer = eventContainer;
-
+    this.#onDataChange = onDataChange;
   }
 
   init(event) {
-    this.#destination = this.#eventsModel.getDestinationById(event.destination);
+    this.#event = event;
+    this.#destination = this.#eventsModel.getDestinationById(this.#event.destination);
+
+    const prevEventComponent = this.#eventComponent;
+    const prevEventFormComponent = this.#eventFormComponent;
 
     this.#eventComponent = new EventView({
-      event,
+      event: this.#event,
       destination: this.#destination,
-      offers: this.#eventsModel.getOffersByType(event.type),
-      onEditClick: this.#onEditClick
+      offers: this.#eventsModel.getOffersByType(this.#event.type),
+      onEditClick: this.#onEditClick,
+      onFavoriteClick: this.#onFavoriteClick
     });
 
     this.#eventFormComponent = new EventFormView({
-      event,
+      event: this.#event,
       eventDestination: this.#destination,
       destinations: this.#eventsModel.destinations,
       offers: this.#eventsModel.offers,
       isEditMode: true,
       onFormSubmit: this.#onFormSubmit,
-      onCloseClick: this.#onCloseClick
+      onCloseClick: this.#onCloseClick,
+      onFavoriteClick: this.#onFavoriteClick
     });
 
-    render(this.#eventComponent, this.#eventContainer);
+
+    if (prevEventComponent === null || prevEventFormComponent === null) {
+      render(this.#eventComponent, this.#eventContainer);
+      return;
+    }
+
+    if (this.#eventContainer.contains(prevEventComponent.element)) {
+      replace(this.#eventComponent, prevEventComponent);
+    }
+
+    if (this.#eventContainer.contains(prevEventFormComponent.element)) {
+      replace(this.#eventFormComponent, prevEventFormComponent);
+    }
+
+    remove(prevEventComponent);
+    remove(prevEventFormComponent);
   }
 
   #replaceEventToForm() {
@@ -67,5 +90,9 @@ export default class EventPresenter {
   #onFormSubmit = () => {
     this.#replaceFormToEvent();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #onFavoriteClick = () => {
+    this.#onDataChange({ ...this.#event, isFavorite: !this.#event.isFavorite });
   };
 }

@@ -37,4 +37,6 @@ const createRandomIdGeneratorFromRange = (min, max) => {
   };
 };
 
-export { EVENT_TYPES_LIST, getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter };
+const updateEvents = (events, update) => events.map((event) => event.id === update.id ? update : event);
+
+export { EVENT_TYPES_LIST, getRandomInteger, getRandomArrayElement, createRandomIdGeneratorFromRange, capitalizeFirstLetter, updateEvents };
