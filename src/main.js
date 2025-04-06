@@ -3,7 +3,7 @@ import FilterView from './view/filter-view.js';
 import { render, RenderPosition } from './framework/render.js';
 import ListPresenter from './presenter/list-presenter.js';
 import EventsModel from './model/events-model.js';
-import { generateFilter } from './mock/filter.js';
+import { generateFilter } from './utils/filter.js';
 
 const tripMainContainer = document.querySelector('.trip-main');
 const filterContainer = document.querySelector('.trip-controls__filters');
