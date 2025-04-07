@@ -212,7 +212,6 @@ export default class EventFormView extends AbstractStatefulView {
     this.#handleCloseClick = onCloseClick;
 
     this._restoreHandlers();
-
   }
 
   get template() {
@@ -237,6 +236,12 @@ export default class EventFormView extends AbstractStatefulView {
       .addEventListener('change', this.#offerSelectHandler);
     this.element.querySelector('.event__input--price')
       .addEventListener('change', this.#priceChangeHandler);
+  }
+
+  reset(event) {
+    this.updateElement(
+      EventFormView.parseEventToState(event),
+    );
   }
 
   #formSubmitHandler = (evt) => {
