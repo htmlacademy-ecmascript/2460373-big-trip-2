@@ -1,7 +1,7 @@
 import { DateFormat, humanizeDate } from '../utils/date.js';
 import { EVENT_TYPES_LIST } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const BLANK_EVENT = {
   basePrice: '',
@@ -193,7 +193,7 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
   );
 }
 
-export default class EventFormView extends AbstractView {
+export default class EventFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleCloseClick = null;
 
