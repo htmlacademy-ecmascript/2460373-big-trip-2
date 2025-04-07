@@ -285,11 +285,10 @@ export default class EventFormView extends AbstractStatefulView {
     });
   };
 
-  // надо записывать значение как числовое и если да, то как это сделать?
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.value
+      basePrice: Number(evt.target.value)
     });
   };
 
