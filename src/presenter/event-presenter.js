@@ -45,7 +45,7 @@ export default class EventPresenter {
 
     this.#eventFormComponent = new EventFormView({
       event: this.#event,
-      eventDestination: this.#destination,
+      // eventDestination: this.#destination,
       destinations: this.#eventsModel.destinations,
       offers: this.#eventsModel.offers,
       isEditMode: true,
@@ -79,6 +79,7 @@ export default class EventPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#eventFormComponent.reset(this.#event);
       this.#replaceFormToEvent();
     }
   }
@@ -97,7 +98,7 @@ export default class EventPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#replaceFormToEvent();
+      this.resetView();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
@@ -108,7 +109,7 @@ export default class EventPresenter {
   };
 
   #onCloseClick = () => {
-    this.#replaceFormToEvent();
+    this.resetView();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 

@@ -1,7 +1,7 @@
 import { DateFormat, humanizeDate } from '../utils/date.js';
 import { EVENT_TYPES_LIST } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const BLANK_EVENT = {
   basePrice: '',
@@ -126,8 +126,10 @@ function createRollupButtonTemplate(isEditMode) {
     : '';
 }
 
-function createEventEditFormTemplate(event, eventDestination, destinations, offers, isEditMode) {
-  const { id, basePrice, dateFrom, dateTo, type } = event;
+function createEventEditFormTemplate(event, destinations, offers, isEditMode) {
+  const { id, basePrice, dateFrom, dateTo, type, destination: eventDestinationId } = event;
+
+  const selectedDestination = destinations.find((destination) => destination.id === eventDestinationId);
 
   const startDate = humanizeDate(dateFrom, DateFormat.SHORT_DATE_TIME);
   const endDate = humanizeDate(dateTo, DateFormat.SHORT_DATE_TIME);
@@ -156,7 +158,7 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
               ${capitalizeFirstLetter(type)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-${id}" type="text"
-              name="event-destination" value="${eventDestination.name}" list="destination-list-${id}">
+              name="event-destination" value="${selectedDestination.name}" data-destination-name="${selectedDestination.name}" list="destination-list-${id}">
             <datalist id="destination-list-${id}">
               ${createDestinationOptionsTemplate(destinations)}
             </datalist>
@@ -186,32 +188,60 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
         </header>
         <section class="event__details">
           ${createOffersSectionTemplate(event, offers, id)}
-          ${createDestinationSectionTemplate(eventDestination)}
+          ${createDestinationSectionTemplate(selectedDestination)}
         </section>
       </form>
     </li>`
   );
 }
 
-export default class EventFormView extends AbstractView {
+export default class EventFormView extends AbstractStatefulView {
+  #destinations = null;
+  #offers = null;
+  #isEditMode = null;
   #handleFormSubmit = null;
   #handleCloseClick = null;
 
-  constructor({ event = BLANK_EVENT, eventDestination = BLANK_EVENT.destination, destinations, offers, isEditMode, onFormSubmit, onCloseClick }) {
+  constructor({ event = BLANK_EVENT, destinations, offers, isEditMode, onFormSubmit, onCloseClick }) {
     super();
-    this.event = event;
-    this.eventDestination = eventDestination;
-    this.destinations = destinations;
-    this.offers = offers;
-    this.isEditMode = isEditMode;
+    this._setState(EventFormView.parseEventToState(event));
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#isEditMode = isEditMode;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCloseClick = onCloseClick;
 
+    this._restoreHandlers();
+  }
+
+  get template() {
+    return createEventEditFormTemplate(
+      this._state,
+      this.#destinations,
+      this.#offers,
+      this.#isEditMode
+    );
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
-
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#closeClickHandler);
+    this.element.querySelector('.event__type-list')
+      .addEventListener('change', this.#typeToggleHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationToggleHandler);
+    this.element.querySelector('.event__details')
+      .addEventListener('change', this.#offerSelectHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('change', this.#priceChangeHandler);
+  }
+
+  reset(event) {
+    this.updateElement(
+      EventFormView.parseEventToState(event),
+    );
   }
 
   #formSubmitHandler = (evt) => {
@@ -224,13 +254,45 @@ export default class EventFormView extends AbstractView {
     this.#handleCloseClick();
   };
 
-  get template() {
-    return createEventEditFormTemplate(
-      this.event,
-      this.eventDestination,
-      this.destinations,
-      this.offers,
-      this.isEditMode
-    );
-  }
+  #typeToggleHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+      offers: []
+    });
+  };
+
+  #destinationToggleHandler = (evt) => {
+    evt.preventDefault();
+    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+
+    if (newDestination === undefined) {
+      const inputElement = this.element.querySelector('.event__input--destination');
+      inputElement.value = inputElement.dataset.destinationName;
+      return;
+    }
+
+    this.updateElement({
+      destination: newDestination.id,
+    });
+  };
+
+  #offerSelectHandler = (evt) => {
+    evt.preventDefault();
+    const formData = new FormData(this.element.querySelector('form'));
+    this._setState({
+      offers: formData.getAll('offers')
+    });
+  };
+
+  // надо записывать значение как числовое и если да, то как это сделать?
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value
+    });
+  };
+
+  static parseEventToState = (event) => ({ ...event });
+  static parseStateToEvent = (state) => ({ ...state });
 }
