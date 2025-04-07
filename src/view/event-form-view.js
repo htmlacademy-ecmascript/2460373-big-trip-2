@@ -129,7 +129,7 @@ function createRollupButtonTemplate(isEditMode) {
 function createEventEditFormTemplate(event, destinations, offers, isEditMode) {
   const { id, basePrice, dateFrom, dateTo, type, destination: eventDestinationId } = event;
 
-  const selectedDestination = destinations.find((x) => x.id === eventDestinationId);
+  const selectedDestination = destinations.find((destination) => destination.id === eventDestinationId);
 
   const startDate = humanizeDate(dateFrom, DateFormat.SHORT_DATE_TIME);
   const endDate = humanizeDate(dateTo, DateFormat.SHORT_DATE_TIME);
@@ -158,7 +158,7 @@ function createEventEditFormTemplate(event, destinations, offers, isEditMode) {
               ${capitalizeFirstLetter(type)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-${id}" type="text"
-              name="event-destination" value="${selectedDestination.name}" list="destination-list-${id}">
+              name="event-destination" value="${selectedDestination.name}" data-destination-name="${selectedDestination.name}" list="destination-list-${id}">
             <datalist id="destination-list-${id}">
               ${createDestinationOptionsTemplate(destinations)}
             </datalist>
@@ -231,6 +231,8 @@ export default class EventFormView extends AbstractStatefulView {
       .addEventListener('click', this.#closeClickHandler);
     this.element.querySelector('.event__type-list')
       .addEventListener('change', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#eventDestinationToggleHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -252,18 +254,20 @@ export default class EventFormView extends AbstractStatefulView {
     });
   };
 
-  // #eventDestinationToggleHandler = (evt) => {
-  //   evt.preventDefault(); //ищем по названию оффер
-  //   const newDestination = this.#destinations.find((x) => x.name === evt.target.value);
-  //   if (newDestination === undefined) { //добавляет невозможность ввести что угодно в поле
-  //     const inputElement = this.element.querySelector('.event__input--destination');
-  //     inputElement.value = inputElement.dataset.destinationName;
-  //     return;
-  //   }
-  //   this.updateElement({
-  //     destination: newDestination.id,
-  //   });
-  // };
+  #eventDestinationToggleHandler = (evt) => {
+    evt.preventDefault();
+    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+
+    if (newDestination === undefined) {
+      const inputElement = this.element.querySelector('.event__input--destination');
+      inputElement.value = inputElement.dataset.destinationName;
+      return;
+    }
+
+    this.updateElement({
+      destination: newDestination.id,
+    });
+  };
 
   // #eventOffersSelectHandler = (evt) => {
   //   evt.preventDefault();
