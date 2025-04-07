@@ -230,11 +230,13 @@ export default class EventFormView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#closeClickHandler);
     this.element.querySelector('.event__type-list')
-      .addEventListener('change', this.#eventTypeToggleHandler);
+      .addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination')
-      .addEventListener('change', this.#eventDestinationToggleHandler);
+      .addEventListener('change', this.#destinationToggleHandler);
     this.element.querySelector('.event__details')
-      .addEventListener('change', this.#eventOffersSelectHandler);
+      .addEventListener('change', this.#offerSelectHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('change', this.#priceChangeHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -247,7 +249,7 @@ export default class EventFormView extends AbstractStatefulView {
     this.#handleCloseClick();
   };
 
-  #eventTypeToggleHandler = (evt) => {
+  #typeToggleHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
       type: evt.target.value,
@@ -255,7 +257,7 @@ export default class EventFormView extends AbstractStatefulView {
     });
   };
 
-  #eventDestinationToggleHandler = (evt) => {
+  #destinationToggleHandler = (evt) => {
     evt.preventDefault();
     const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
 
@@ -270,11 +272,19 @@ export default class EventFormView extends AbstractStatefulView {
     });
   };
 
-  #eventOffersSelectHandler = (evt) => {
+  #offerSelectHandler = (evt) => {
     evt.preventDefault();
     const formData = new FormData(this.element.querySelector('form'));
     this._setState({
       offers: formData.getAll('offers')
+    });
+  };
+
+  // надо записывать значение как числовое и если да, то как это сделать?
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value
     });
   };
 
