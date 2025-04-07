@@ -126,8 +126,10 @@ function createRollupButtonTemplate(isEditMode) {
     : '';
 }
 
-function createEventEditFormTemplate(event, eventDestination, destinations, offers, isEditMode) {
-  const { id, basePrice, dateFrom, dateTo, type } = event;
+function createEventEditFormTemplate(event, destinations, offers, isEditMode) {
+  const { id, basePrice, dateFrom, dateTo, type, destination: eventDestinationId } = event;
+
+  const selectedDestination = destinations.find((x) => x.id === eventDestinationId);
 
   const startDate = humanizeDate(dateFrom, DateFormat.SHORT_DATE_TIME);
   const endDate = humanizeDate(dateTo, DateFormat.SHORT_DATE_TIME);
@@ -156,7 +158,7 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
               ${capitalizeFirstLetter(type)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-${id}" type="text"
-              name="event-destination" value="${eventDestination.name}" list="destination-list-${id}">
+              name="event-destination" value="${selectedDestination.name}" list="destination-list-${id}">
             <datalist id="destination-list-${id}">
               ${createDestinationOptionsTemplate(destinations)}
             </datalist>
@@ -186,7 +188,7 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
         </header>
         <section class="event__details">
           ${createOffersSectionTemplate(event, offers, id)}
-          ${createDestinationSectionTemplate(eventDestination)}
+          ${createDestinationSectionTemplate(selectedDestination)}
         </section>
       </form>
     </li>`
@@ -194,24 +196,41 @@ function createEventEditFormTemplate(event, eventDestination, destinations, offe
 }
 
 export default class EventFormView extends AbstractStatefulView {
+  #destinations = null;
+  #offers = null;
+  #isEditMode = null;
   #handleFormSubmit = null;
   #handleCloseClick = null;
 
-  constructor({ event = BLANK_EVENT, eventDestination = BLANK_EVENT.destination, destinations, offers, isEditMode, onFormSubmit, onCloseClick }) {
+  constructor({ event = BLANK_EVENT, destinations, offers, isEditMode, onFormSubmit, onCloseClick }) {
     super();
-    this.event = event;
-    this.eventDestination = eventDestination;
-    this.destinations = destinations;
-    this.offers = offers;
-    this.isEditMode = isEditMode;
+    this._setState(EventFormView.parseEventToState(event));
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#isEditMode = isEditMode;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCloseClick = onCloseClick;
 
+    this._restoreHandlers();
+
+  }
+
+  get template() {
+    return createEventEditFormTemplate(
+      this._state,
+      this.#destinations,
+      this.#offers,
+      this.#isEditMode
+    );
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
-
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#closeClickHandler);
+    this.element.querySelector('.event__type-list')
+      .addEventListener('change', this.#eventTypeToggleHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -224,13 +243,37 @@ export default class EventFormView extends AbstractStatefulView {
     this.#handleCloseClick();
   };
 
-  get template() {
-    return createEventEditFormTemplate(
-      this.event,
-      this.eventDestination,
-      this.destinations,
-      this.offers,
-      this.isEditMode
-    );
-  }
+  // ============== От Макса ==============
+  #eventTypeToggleHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+      offers: []
+    });
+  };
+
+  // #eventDestinationToggleHandler = (evt) => {
+  //   evt.preventDefault(); //ищем по названию оффер
+  //   const newDestination = this.#destinations.find((x) => x.name === evt.target.value);
+  //   if (newDestination === undefined) { //добавляет невозможность ввести что угодно в поле
+  //     const inputElement = this.element.querySelector('.event__input--destination');
+  //     inputElement.value = inputElement.dataset.destinationName;
+  //     return;
+  //   }
+  //   this.updateElement({
+  //     destination: newDestination.id,
+  //   });
+  // };
+
+  // #eventOffersSelectHandler = (evt) => {
+  //   evt.preventDefault();
+  //   const formData = new FormData(this.element.querySelector('form'));
+  //   this.updateElement({
+  //     offers: formData.getAll('offers')
+  //   });
+  // };
+  // ============== конец ==============
+
+  static parseEventToState = (event) => ({ ...event });
+  static parseStateToEvent = (state) => ({ ...state });
 }

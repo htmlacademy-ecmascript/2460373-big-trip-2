@@ -78,14 +78,17 @@ function createEventTemplate(event, destination, offers) {
 }
 
 export default class EventView extends AbstractView {
+  #event = null;
+  #destination = null;
+  #allOffers = null;
   #onEditClick = null;
   #onFavoriteClick = null;
 
   constructor({ event, destination, offers, onEditClick, onFavoriteClick }) {
     super();
-    this.event = event;
-    this.destination = destination;
-    this.allOffers = offers;
+    this.#event = event;
+    this.#destination = destination;
+    this.#allOffers = offers;
     this.#onEditClick = onEditClick;
     this.#onFavoriteClick = onFavoriteClick;
 
@@ -106,11 +109,11 @@ export default class EventView extends AbstractView {
   };
 
   #getEventOffers() {
-    return this.allOffers.filter((offer) =>
-      this.event.offers.some((v) => v === offer.id));
+    return this.#allOffers.filter((offer) =>
+      this.#event.offers.some((v) => v === offer.id));
   }
 
   get template() {
-    return createEventTemplate(this.event, this.destination, this.#getEventOffers());
+    return createEventTemplate(this.#event, this.#destination, this.#getEventOffers());
   }
 }
