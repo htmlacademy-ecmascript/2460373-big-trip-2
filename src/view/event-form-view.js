@@ -233,6 +233,8 @@ export default class EventFormView extends AbstractStatefulView {
       .addEventListener('change', this.#eventTypeToggleHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#eventDestinationToggleHandler);
+    this.element.querySelector('.event__details')
+      .addEventListener('change', this.#eventOffersSelectHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -245,7 +247,6 @@ export default class EventFormView extends AbstractStatefulView {
     this.#handleCloseClick();
   };
 
-  // ============== От Макса ==============
   #eventTypeToggleHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
@@ -269,14 +270,13 @@ export default class EventFormView extends AbstractStatefulView {
     });
   };
 
-  // #eventOffersSelectHandler = (evt) => {
-  //   evt.preventDefault();
-  //   const formData = new FormData(this.element.querySelector('form'));
-  //   this.updateElement({
-  //     offers: formData.getAll('offers')
-  //   });
-  // };
-  // ============== конец ==============
+  #eventOffersSelectHandler = (evt) => {
+    evt.preventDefault();
+    const formData = new FormData(this.element.querySelector('form'));
+    this._setState({
+      offers: formData.getAll('offers')
+    });
+  };
 
   static parseEventToState = (event) => ({ ...event });
   static parseStateToEvent = (state) => ({ ...state });
