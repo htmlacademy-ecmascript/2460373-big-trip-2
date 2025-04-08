@@ -2,6 +2,8 @@ import { DateFormat, humanizeDate } from '../utils/date.js';
 import { EVENT_TYPES_LIST } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_EVENT = {
   basePrice: '',
@@ -201,6 +203,8 @@ export default class EventFormView extends AbstractStatefulView {
   #isEditMode = null;
   #handleFormSubmit = null;
   #handleCloseClick = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ event = BLANK_EVENT, destinations, offers, isEditMode, onFormSubmit, onCloseClick }) {
     super();
@@ -236,12 +240,28 @@ export default class EventFormView extends AbstractStatefulView {
       .addEventListener('change', this.#offerSelectHandler);
     this.element.querySelector('.event__input--price')
       .addEventListener('change', this.#priceChangeHandler);
+
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
   }
 
   reset(event) {
     this.updateElement(
       EventFormView.parseEventToState(event),
     );
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
   }
 
   #formSubmitHandler = (evt) => {
@@ -291,6 +311,78 @@ export default class EventFormView extends AbstractStatefulView {
       basePrice: Number(evt.target.value)
     });
   };
+
+  // ============ из урока ============
+  // #setDatePickers = () => {
+  //   const [dateFromElement, dateToElement] = this.element.querySelectorAll('.event__input--time');
+  //   const commonConfig = {
+  //       dateFormat: 'd/m/y H:i',
+  //       enableTime: true,
+  //       locale: {
+  //           firstDayOfWeek: 1
+  //       },
+  //       'time_24hr': true
+  //   };
+
+  //   this.#datepickerFrom = flatpicker(
+  //       dateFromElement,
+  //       {
+  //           ...commonConfig,
+  //           defaultDate: this._state.paint.dateFrom,
+  //           onClose: this.#dateFromCloseHandler,
+  //           maxDate: this._state.paint.dateTo
+  //       }
+  // ============ конец ============
+
+  // ============ от Макса ============
+  #datepickerConfig = {
+    minuteIncrement: 1,
+    enableTime: true,
+    dateFormat: 'Z',
+    'time_24hr': true,
+    altInput: true,
+    altFormat: 'j/n/y H:i',
+  };
+
+  #setDatepickerFrom() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('input[name="event-start-time"]'),
+      {
+        defaultDate: this._state.dateFrom,
+        maxDate: this._state.dateTo,
+        onClose: this.#dateFromChangeHandler,
+        ...this.#datepickerConfig
+      },
+    );
+  }
+
+  #setDatepickerTo() {
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('input[name="event-end-time"]'),
+      {
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onClose: this.#dateToChangeHandler,
+        ...this.#datepickerConfig
+      },
+    );
+  }
+
+  #dateFromChangeHandler = () => {
+    this._setState({
+      dateFrom: this.element.querySelector('.flatpickr-input[name="event-start-time"]').value,
+    });
+    this.#datepickerTo.set('minDate', this.element.querySelector('.flatpickr-input[name="event-start-time"]').value);
+  };
+
+  #dateToChangeHandler = () => {
+    this._setState({
+      dateTo: this.element.querySelector('.flatpickr-input[name="event-end-time"]').value,
+    });
+    this.#datepickerFrom.set('maxDate', this.element.querySelector('.flatpickr-input[name="event-end-time"]').value);
+  };
+
+  // ============ конец ============
 
   static parseEventToState = (event) => ({ ...event });
   static parseStateToEvent = (state) => ({ ...state });
